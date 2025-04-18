@@ -10,8 +10,21 @@
       volumes:
         - .:/usr/src/app
         - /usr/src/app/node_modules
-      environment:
-        - MONGODB_URI=mongodb://mongo:27017/aird
+      env_file:
+        - .env.local
+    auth:
+      build: 
+        context: .
+        dockerfile: ./apps/auth/Dockerfile
+        target: development
+      command: pnpm run start:dev auth
+      ports: 
+        - '3001:3001'
+      volumes:
+        - .:/usr/src/app
+        - /usr/src/app/node_modules
+      env_file:
+        - .env.local
     mongo:
       image: mongo
       

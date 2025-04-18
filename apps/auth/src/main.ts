@@ -1,10 +1,10 @@
 import { isProduction } from '@app/common/config/environment.ts';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { ReservationsModule } from './reservations.module';
+import { AppModule } from './app/app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(ReservationsModule, {
+  const app = await NestFactory.create(AppModule, {
     logger: isProduction
       ? ['error', 'warn']
       : ['log', 'warn', 'debug', 'error', 'verbose'],
@@ -15,6 +15,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  await app.listen(process.env.port ?? 3000);
+
+  await app.listen(process.env.port ?? 3001);
 }
 bootstrap();

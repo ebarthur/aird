@@ -1,13 +1,13 @@
 import { CommonModule } from '@app/common/common.module';
 import { DatabaseModule } from '@app/common/database/database.module';
 import { Module } from '@nestjs/common';
+import { ReservationsController } from './controllers/reservations.controller';
 import {
   ReservationDocument,
   ReservationSchema,
 } from './entities/reservation.schema';
-import { ReservationsController } from './reservations.controller';
-import { ReservationsRepository } from './reservations.repository';
-import { ReservationsService } from './reservations.service';
+import { ReservationsRepository } from './repositories/reservations.repository';
+import { ReservationsService } from './services/reservations.service';
 
 @Module({
   imports: [

@@ -8,7 +8,7 @@
     "tsConfigPath": "apps/reservations/tsconfig.app.json",
     "assets": [
       {
-        "include": "../../../libs/common/src/languages/**/*",
+        "include": "../../../@core/common/src/languages/**/*",
         "watchAssets": true,
         "outDir": "dist"
       }
@@ -17,11 +17,11 @@
   "projects": {
     "common": {
       "type": "library",
-      "root": "libs/common",
+      "root": "@core/common",
       "entryFile": "index",
-      "sourceRoot": "libs/common/src",
+      "sourceRoot": "@core/common/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/common/tsconfig.lib.json"
+        "tsConfigPath": "@core/common/tsconfig.lib.json"
       }
     },
     "reservations": {
@@ -31,6 +31,15 @@
       "sourceRoot": "apps/reservations/src",
       "compilerOptions": {
         "tsConfigPath": "apps/reservations/tsconfig.app.json"
+      }
+    },
+    "auth": {
+      "type": "application",
+      "root": "apps/auth",
+      "entryFile": "main",
+      "sourceRoot": "apps/auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/auth/tsconfig.app.json"
       }
     }
   },
