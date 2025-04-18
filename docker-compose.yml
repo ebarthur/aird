@@ -1,0 +1,17 @@
+  services:
+    reservations:
+      build: 
+        context: .
+        dockerfile: ./apps/reservations/Dockerfile
+        target: development
+      command: pnpm run start:dev reservations
+      ports: 
+        - '3000:3000'
+      volumes:
+        - .:/usr/src/app
+        - /usr/src/app/node_modules
+      environment:
+        - MONGODB_URI=mongodb://mongo:27017/aird
+    mongo:
+      image: mongo
+      
