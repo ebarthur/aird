@@ -22,7 +22,7 @@ export class ReservationsService implements IReservationService {
   }
 
   findOne(_id: ObjectId) {
-    return this.reservationRepository.findOne({ _id });
+    return this.reservationRepository.findOneOrFail({ _id });
   }
 
   update(_id: ObjectId, updateReservationDto: UpdateReservationDto) {

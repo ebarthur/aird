@@ -7,7 +7,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 import { CreateReservationDto } from '../dto/create-reservation.dto';

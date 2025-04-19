@@ -1,17 +1,19 @@
 import { join } from 'node:path';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
-import { ConfigModule } from './config/config.module';
 import { DatabaseModule } from './database/database.module';
 import { HttpExceptionFilter } from './filters/exception.filter';
+import { AuthJwtAccessGuard } from './guards/jwt.guard';
+import { RolesGuard } from './guards/roles.guard';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
+import { AuthJwtAccessStrategy } from './providers/jwt.strategy';
+import { HashService } from './services/hash.service';
 
 @Module({
   imports: [
     DatabaseModule,
-    ConfigModule,
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: {
@@ -25,6 +27,8 @@ import { LoggingMiddleware } from './middlewares/logging.middleware';
     }),
   ],
   providers: [
+    AuthJwtAccessStrategy,
+    HashService,
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
@@ -33,8 +37,16 @@ import { LoggingMiddleware } from './middlewares/logging.middleware';
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
     },
+    {
+      provide: APP_GUARD,
+      useClass: AuthJwtAccessGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
-  exports: [],
+  exports: [HashService],
 })
 export class CommonModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

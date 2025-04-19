@@ -21,7 +21,8 @@
       "complexity": { "noUselessTypeConstraint": "error" },
       "correctness": {
         "noUnusedVariables": "error",
-        "useArrayLiterals": "off"
+        "useArrayLiterals": "off",
+        "noUnusedImports": "warn"
       },
       "style": {
         "noNamespace": "error",

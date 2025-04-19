@@ -1,13 +1,17 @@
 import { AbstractDocument } from '@app/common/database/abstract.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ROLE, USER_ROLE } from '../../auth/interfaces/auth.interface';
 
 @Schema({ versionKey: false })
-export class UsersDocument extends AbstractDocument {
+export class UserDocument extends AbstractDocument {
   @Prop({ unique: true })
   email: string;
 
-  @Prop()
+  @Prop({ required: true })
   password: string;
+
+  @Prop({ type: String, enum: Object.values(USER_ROLE) })
+  role: ROLE;
 }
 
-export const UserSchema = SchemaFactory.createForClass(UsersDocument);
+export const UserSchema = SchemaFactory.createForClass(UserDocument);

@@ -1,16 +1,63 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HashService } from '@app/common/services/hash.service';
+import {
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { AuthUserDto } from '../../auth/dtos/auth-user.dto';
 import { CreateUserDto } from '../dtos/create-user.dto';
+import { LoginUserDto } from '../dtos/login-user.dto';
+import { UserDocument } from '../entities/user.schema';
 import { IUserService } from '../interfaces/user-service.interface';
 import { UsersRepository } from '../repositories/users.repository';
 
 @Injectable()
 export class UserService implements IUserService {
   private logger = new Logger(UserService.name, { timestamp: true });
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly hashService: HashService,
+  ) {}
 
-  async create(createUserDto: CreateUserDto) {
-    return await this.usersRepository.create(createUserDto);
+  async create(createUserDto: CreateUserDto): Promise<void> {
+    const { email, password } = createUserDto;
+    const userExists = await this.usersRepository.findOne({
+      email: createUserDto.email,
+    });
 
-    // []: Continue
+    if (userExists) throw new ConflictException('user.userExistsByEmail');
+
+    const hashedPassword = await this.hashService.createHash(password);
+    await this.usersRepository.create({
+      email,
+      password: hashedPassword,
+      role: 'common',
+    });
+  }
+
+  async find(): Promise<AuthUserDto[]> {
+    return this.usersRepository.find({});
+  }
+
+  async validateUser(loginUserDto: LoginUserDto): Promise<UserDocument> {
+    const { email, password: loginPassword } = loginUserDto;
+    const user = await this.usersRepository.findOne({
+      email,
+    });
+
+    if (!user) throw new NotFoundException('user.userNotFound');
+
+    const isValidPassword = await this.hashService.match(
+      loginPassword,
+      user.password,
+    );
+
+    if (!isValidPassword)
+      throw new UnauthorizedException('user.invalidPassword');
+
+    this.logger.log(`User ${user._id} has been validated.`);
+    return user;
   }
 }

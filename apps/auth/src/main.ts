@@ -1,6 +1,6 @@
 import { isProduction } from '@app/common/config/environment';
-import { TrimPipe } from '@app/common/pipes/trim-input.pipe';
-import { ValidationPipe } from '@nestjs/common';
+import { setupApp } from '@app/common/config/setup/setup';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 
@@ -10,14 +10,8 @@ async function bootstrap() {
       ? ['error', 'warn']
       : ['log', 'warn', 'debug', 'error', 'verbose'],
   });
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-    }),
-  );
-  app.useGlobalPipes(new TrimPipe());
-
-  await app.listen(process.env.port ?? 3001);
+  await setupApp(app);
+  const configService = app.get(ConfigService);
+  await app.listen(configService.get<string>('PORT'));
 }
 bootstrap();

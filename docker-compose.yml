@@ -9,9 +9,9 @@
         - '3000:3000'
       volumes:
         - .:/usr/src/app
-        - /usr/src/app/node_modules
+        # - /usr/src/app/node_modules
       env_file:
-        - .env.local
+        - ./apps/reservations/.env
     auth:
       build: 
         context: .
@@ -22,9 +22,9 @@
         - '3001:3001'
       volumes:
         - .:/usr/src/app
-        - /usr/src/app/node_modules
+        # - /usr/src/app/node_modules
       env_file:
-        - .env.local
+        - ./apps/auth/.env
     mongo:
       image: mongo
       

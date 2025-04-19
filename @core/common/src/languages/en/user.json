@@ -1,0 +1,8 @@
+{
+  "userExistsByEmail": "An account with this email already exists.",
+  "userExistsByUserName": "An account with this username already exists.",
+  "userNotFound": "User not found.",
+  "invalidPassword": "The provided email or password is invalid.",
+  "userDeleted": "User has been successfully deleted.",
+  "serverError": "An unexpected error occurred. Please try again later or contact support."
+}
