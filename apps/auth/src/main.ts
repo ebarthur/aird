@@ -1,4 +1,5 @@
-import { isProduction } from '@app/common/config/environment.ts';
+import { isProduction } from '@app/common/config/environment';
+import { TrimPipe } from '@app/common/pipes/trim-input.pipe';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
@@ -15,6 +16,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  app.useGlobalPipes(new TrimPipe());
 
   await app.listen(process.env.port ?? 3001);
 }
