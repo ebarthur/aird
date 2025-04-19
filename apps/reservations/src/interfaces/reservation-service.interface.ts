@@ -4,7 +4,10 @@ import { UpdateReservationDto } from '../dto/update-reservation.dto';
 import { ReservationDocument } from '../entities/reservation.schema';
 
 export interface IReservationService {
-  create(data: CreateReservationDto): Promise<ReservationDocument>;
+  create(
+    data: CreateReservationDto,
+    userId: string,
+  ): Promise<ReservationDocument>;
   findAll(): Promise<ReservationDocument[]>;
   findOne(_id: ObjectId): Promise<ReservationDocument>;
   update(
