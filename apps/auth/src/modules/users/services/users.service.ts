@@ -1,10 +1,10 @@
 import { HashService } from '@app/common/services/hash.service';
 import {
-  ConflictException,
   Injectable,
   Logger,
   NotFoundException,
   UnauthorizedException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { AuthUserDto } from '../../auth/dtos/auth-user.dto';
 import { CreateUserDto } from '../dtos/create-user.dto';
@@ -27,7 +27,8 @@ export class UserService implements IUserService {
       email: createUserDto.email,
     });
 
-    if (userExists) throw new ConflictException('user.userExistsByEmail');
+    if (userExists)
+      throw new UnprocessableEntityException('user.userExistsByEmail');
 
     const hashedPassword = await this.hashService.createHash(password);
     await this.usersRepository.create({
