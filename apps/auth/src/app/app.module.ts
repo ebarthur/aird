@@ -1,8 +1,11 @@
 import { CommonModule } from '@app/common/common.module';
 import authConfig from '@app/common/config/environment/auth.config';
 import databaseConfig from '@app/common/config/environment/db.config';
+import { AuthJwtAccessGuard } from '@app/common/guards/jwt.guard';
+import { RolesGuard } from '@app/common/guards/roles.guard';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import * as Joi from 'joi';
 import { AuthModule } from '../modules/auth/auth.module';
 
@@ -21,7 +24,16 @@ import { AuthModule } from '../modules/auth/auth.module';
     CommonModule,
     AuthModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthJwtAccessGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
   exports: [],
 })
 export class AppModule {}
