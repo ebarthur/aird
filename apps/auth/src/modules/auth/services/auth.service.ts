@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { AuthUserDto } from '../dtos/auth-user.dto';
+import { IAuthService } from '../interfaces/auth-service.interface';
 import { IAuthPayload } from '../interfaces/auth.interface';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements IAuthService {
   constructor(private readonly jwtService: JwtService) {}
 
   async login(user: AuthUserDto, response: Response) {
