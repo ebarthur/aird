@@ -1,5 +1,9 @@
 import { AUTH_MESSAGE_PATTERN } from '@app/common/CONSTANTS/app.constants';
-import { AuthUser } from '@app/common/decorators/auth.decorator';
+import {
+  AuthUser,
+  CurrentUser,
+  ReqUser,
+} from '@app/common/decorators/auth.decorator';
 import { Public } from '@app/common/decorators/public.decorator';
 import { Controller, Post, Res, UseGuards } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
@@ -25,7 +29,7 @@ export class AuthController {
 
   @UseGuards(JwtGuard)
   @MessagePattern(AUTH_MESSAGE_PATTERN)
-  async authenticate(@AuthUser() user: AuthUserDto) {
+  async authenticate(@CurrentUser() user: ReqUser) {
     return user;
   }
 }

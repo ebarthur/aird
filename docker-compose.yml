@@ -11,7 +11,7 @@
         - .:/usr/src/app
         # - /usr/src/app/node_modules
       env_file:
-        - ./apps/reservations/.env
+        - ./apps/reservations/.env.docker
     auth:
       build: 
         context: .
@@ -24,7 +24,7 @@
         - .:/usr/src/app
         # - /usr/src/app/node_modules
       env_file:
-        - ./apps/auth/.env
+        - ./apps/auth/.env.docker
     mongo:
       image: mongo
       

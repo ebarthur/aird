@@ -6,7 +6,6 @@ import {
   UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { AuthUserDto } from '../../auth/dtos/auth-user.dto';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { LoginUserDto } from '../dtos/login-user.dto';
 import { UserDocument } from '../entities/user.schema';
@@ -38,7 +37,7 @@ export class UserService implements IUserService {
     });
   }
 
-  async find(): Promise<AuthUserDto[]> {
+  async find(): Promise<UserDocument[]> {
     return this.usersRepository.find({});
   }
 
