@@ -9,6 +9,7 @@ import { UserService } from './services/users.service';
 @Module({
   imports: [
     CommonModule,
+    DatabaseModule,
     DatabaseModule.forFeature([
       { name: UserDocument.name, schema: UserSchema },
     ]),

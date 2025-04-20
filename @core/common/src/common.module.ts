@@ -1,17 +1,13 @@
 import { join } from 'node:path';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
-import { DatabaseModule } from './database/database.module';
-import { HttpExceptionFilter } from './filters/exception.filter';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
-import { AuthJwtAccessStrategy } from './providers/jwt.strategy';
 import { HashService } from './services/hash.service';
 
 @Module({
   imports: [
-    DatabaseModule,
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: {
@@ -25,16 +21,15 @@ import { HashService } from './services/hash.service';
     }),
   ],
   providers: [
-    AuthJwtAccessStrategy,
     HashService,
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
     },
-    {
-      provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: HttpExceptionFilter,
+    // },
   ],
   exports: [HashService],
 })
