@@ -1,5 +1,4 @@
 import { CurrentUser, ReqUser } from '@app/common/decorators/auth.decorator';
-import { JwtRPCAuthGuard } from '@app/common/guards/jwt-rpc.guard';
 import { ValidateObjectIdPipe } from '@app/common/pipes/validate-object-id.pipe';
 import {
   Body,
@@ -9,7 +8,6 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 import { CreateReservationDto } from '../dto/create-reservation.dto';
@@ -20,7 +18,6 @@ import { ReservationsService } from '../services/reservations.service';
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
-  @UseGuards(JwtRPCAuthGuard)
   @Post()
   create(
     @Body() createReservationDto: CreateReservationDto,
@@ -29,19 +26,16 @@ export class ReservationsController {
     return this.reservationsService.create(createReservationDto, user.id);
   }
 
-  @UseGuards(JwtRPCAuthGuard)
   @Get()
   findAll() {
     return this.reservationsService.findAll();
   }
 
-  @UseGuards(JwtRPCAuthGuard)
   @Get(':id')
   findOne(@Param('id', ValidateObjectIdPipe) id: ObjectId) {
     return this.reservationsService.findOne(id);
   }
 
-  @UseGuards(JwtRPCAuthGuard)
   @Patch(':id')
   update(
     @Param('id', ValidateObjectIdPipe) id: ObjectId,
@@ -50,7 +44,6 @@ export class ReservationsController {
     return this.reservationsService.update(id, updateReservationDto);
   }
 
-  @UseGuards(JwtRPCAuthGuard)
   @Delete(':id')
   remove(@Param('id', ValidateObjectIdPipe) id: ObjectId) {
     return this.reservationsService.remove(id);

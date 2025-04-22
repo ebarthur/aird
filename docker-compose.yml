@@ -38,6 +38,19 @@
         # - /usr/src/app/node_modules
       env_file:
         - ./apps/payments/.env.docker
+    notifications:
+      build: 
+        context: .
+        dockerfile: ./apps/notifications/Dockerfile
+        target: development
+      command: pnpm run start:dev notifications
+      ports: 
+        - '3004:3004'
+      volumes:
+        - .:/usr/src/app
+        # - /usr/src/app/node_modules
+      env_file:
+        - ./apps/notifications/.env.docker
     mongo:
       image: mongo
       

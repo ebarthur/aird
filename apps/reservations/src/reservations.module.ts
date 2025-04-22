@@ -7,8 +7,12 @@ import authConfig from '@app/common/config/environment/auth.config';
 import databaseConfig from '@app/common/config/environment/db.config';
 import paymentConfig from '@app/common/config/environment/payment.config';
 import { DatabaseModule } from '@app/common/database/database.module';
+import { AuthJwtAccessGuard } from '@app/common/guards/jwt.guard';
+import { RolesGuard } from '@app/common/guards/roles.guard';
+import { AuthJwtAccessStrategy } from '@app/common/providers/jwt.strategy';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import * as Joi from 'joi';
 import { ReservationsController } from './controllers/reservations.controller';
@@ -65,6 +69,18 @@ import { ReservationsService } from './services/reservations.service';
     ]),
   ],
   controllers: [ReservationsController],
-  providers: [ReservationsService, ReservationsRepository],
+  providers: [
+    ReservationsService,
+    ReservationsRepository,
+    AuthJwtAccessStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: AuthJwtAccessGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class ReservationsModule {}
