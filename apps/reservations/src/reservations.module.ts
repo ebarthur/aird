@@ -14,6 +14,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { UsersModule } from 'apps/auth/src/modules/users/users.module';
 import * as Joi from 'joi';
 import { ReservationsController } from './controllers/reservations.controller';
 import {
@@ -38,6 +39,7 @@ import { ReservationsService } from './services/reservations.service';
         PAYMENT_TCP_HOST: Joi.string().hostname().required(),
       }),
     }),
+    UsersModule,
     CommonModule,
     DatabaseModule,
     DatabaseModule.forFeature([

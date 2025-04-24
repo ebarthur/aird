@@ -2,15 +2,16 @@ import {
   NOTIFICATIONS_SERVICE,
   NOTIFY_EMAIL,
 } from '@app/common/CONSTANTS/app.constants';
-import { CreateChargeDto } from '@app/common/dtos/create-charge.dto';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from '@nestjs/microservices';
 import Stripe from 'stripe';
+import { PaymentCreateChargeDto } from '../dto/payment-create-charge.dto';
 import { IPaymentService } from '../interfaces/payment.interface';
 
 @Injectable()
 export class PaymentsService implements IPaymentService {
+  private logger = new Logger(PaymentsService.name, { timestamp: true });
   private readonly stripeClient: Stripe;
   constructor(
     private readonly configService: ConfigService,
@@ -27,15 +28,15 @@ export class PaymentsService implements IPaymentService {
 
   async createCharge({
     amount,
-  }: CreateChargeDto): Promise<Stripe.PaymentIntent> {
+    email,
+  }: PaymentCreateChargeDto): Promise<Stripe.PaymentIntent> {
     const paymentIntent = await this.stripeClient.paymentIntents.create({
       amount: amount * 100, // Amount in smallest unit
       currency: 'cad',
       payment_method: 'pm_card_visa', // Test card token provided by Stripe
       payment_method_types: ['card'],
     });
-
-    this.notificationService.emit(NOTIFY_EMAIL, {});
+    this.notificationService.emit(NOTIFY_EMAIL, email); // fire and forget
 
     return paymentIntent;
   }
