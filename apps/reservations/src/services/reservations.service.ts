@@ -9,6 +9,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { UsersRepository } from 'apps/auth/src/modules/users/repositories/users.repository';
 import { ObjectId } from 'mongoose';
 import { Observable, catchError, map } from 'rxjs';
 import Stripe from 'stripe';
@@ -25,14 +26,17 @@ export class ReservationsService implements IReservationService {
   });
   constructor(
     private readonly reservationRepository: ReservationsRepository,
+    private readonly userRepository: UsersRepository,
     @Inject(PAYMENTS_SERVICE) private readonly paymentsService: ClientProxy,
   ) {}
   async create(
     createReservationDto: CreateReservationDto,
     userId: string,
   ): Promise<Observable<Promise<ReservationDocument>>> {
+    const { email } = await this.userRepository.findOneOrFail({ _id: userId });
+
     return this.paymentsService
-      .send(CREATE_CHARGE, createReservationDto.charge)
+      .send(CREATE_CHARGE, { ...createReservationDto.charge, email })
       .pipe(
         map((res: Stripe.PaymentIntent) => {
           const { id: invoiceId } = res;
