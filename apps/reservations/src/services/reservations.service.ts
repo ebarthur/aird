@@ -2,12 +2,7 @@ import {
   CREATE_CHARGE,
   PAYMENTS_SERVICE,
 } from '@app/common/CONSTANTS/app.constants';
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { UsersRepository } from 'apps/auth/src/modules/users/repositories/users.repository';
 import { ObjectId } from 'mongoose';
@@ -21,9 +16,6 @@ import { ReservationsRepository } from '../repositories/reservations.repository'
 
 @Injectable()
 export class ReservationsService implements IReservationService {
-  private readonly logger = new Logger(ReservationsService.name, {
-    timestamp: true,
-  });
   constructor(
     private readonly reservationRepository: ReservationsRepository,
     private readonly userRepository: UsersRepository,

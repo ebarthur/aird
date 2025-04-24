@@ -2,7 +2,7 @@ import {
   NOTIFICATIONS_SERVICE,
   NOTIFY_EMAIL,
 } from '@app/common/CONSTANTS/app.constants';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from '@nestjs/microservices';
 import Stripe from 'stripe';
@@ -11,7 +11,6 @@ import { IPaymentService } from '../interfaces/payment.interface';
 
 @Injectable()
 export class PaymentsService implements IPaymentService {
-  private logger = new Logger(PaymentsService.name, { timestamp: true });
   private readonly stripeClient: Stripe;
   constructor(
     private readonly configService: ConfigService,
