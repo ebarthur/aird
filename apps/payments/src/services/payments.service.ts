@@ -35,7 +35,7 @@ export class PaymentsService implements IPaymentService {
       payment_method: 'pm_card_visa', // Test card token provided by Stripe
       payment_method_types: ['card'],
     });
-    this.notificationService.emit(NOTIFY_EMAIL, email); // fire and forget
+    this.notificationService.emit(NOTIFY_EMAIL, { email }); // fire and forget
 
     return paymentIntent;
   }
