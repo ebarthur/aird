@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ResendService } from 'nestjs-resend';
+import { NotifyEmailDto } from '../dtos/notify-email.dto';
 
 @Injectable()
 export class NotificationsService {
@@ -8,7 +9,7 @@ export class NotificationsService {
     private readonly configService: ConfigService,
     private readonly resendService: ResendService,
   ) {}
-  notifyEmail(email: string) {
+  notifyEmail({ email }: NotifyEmailDto) {
     this.resendService.send({
       from: this.configService.get('email.resend.from'),
       to: email,
