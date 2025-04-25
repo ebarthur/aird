@@ -9,7 +9,7 @@ export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
   @EventPattern(NOTIFY_EMAIL)
-  notify_email(@Payload() { email }: NotifyEmailDto) {
-    this.notificationsService.notifyEmail({ email });
+  notify_email(@Payload() data: NotifyEmailDto) {
+    this.notificationsService.notifyEmail(data);
   }
 }

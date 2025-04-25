@@ -38,6 +38,8 @@
         # - /usr/src/app/node_modules
       env_file:
         - ./apps/payments/.env.docker
+      depends_on:
+        - notifications
     notifications:
       build: 
         context: .
