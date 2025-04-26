@@ -61,5 +61,6 @@ steps:
     ]
 
 options:
-  serviceAccount: 'projects/fair-syntax-457919-b9/serviceAccounts/cloudbuild-sa@fair-syntax-457919-b9.iam.gserviceaccount.com'
   logging: CLOUD_LOGGING_ONLY
+
+serviceAccount: 'projects/fair-syntax-457919-b9/serviceAccounts/cloudbuild-sa@fair-syntax-457919-b9.iam.gserviceaccount.com'
