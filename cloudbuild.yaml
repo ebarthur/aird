@@ -9,10 +9,10 @@ steps:
       '.'
     ]
   - name: 'gcr.io/cloud-builders/docker'
-  args: [
-    'push',
-    'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/reservations/production',
-  ]
+    args: [
+      'push',
+      'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/reservations/production',
+    ]
   # auth
   - name: 'gcr.io/cloud-builders/docker'
     args: [
@@ -23,10 +23,10 @@ steps:
       '.'
     ]
   - name: 'gcr.io/cloud-builders/docker'
-  args: [
-    'push',
-    'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/auth/production',
-  ]
+    args: [
+      'push',
+      'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/auth/production',
+    ]
   # payments
   - name: 'gcr.io/cloud-builders/docker'
     args: [
@@ -37,10 +37,10 @@ steps:
       '.'
     ]
   - name: 'gcr.io/cloud-builders/docker'
-  args: [
-    'push',
-    'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/payments/production',
-  ]
+    args: [
+      'push',
+      'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/payments/production',
+    ]
   #notifications
   - name: 'gcr.io/cloud-builders/docker'
     args: [
@@ -51,7 +51,7 @@ steps:
       '.'
     ]
   - name: 'gcr.io/cloud-builders/docker'
-  args: [
-    'push',
-    'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/notifications/production',
-  ]
+    args: [
+      'push',
+      'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/notifications/production',
+    ]
