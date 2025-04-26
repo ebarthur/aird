@@ -1,57 +1,65 @@
-# reservations
 steps:
+  # Reservations
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
       '-t',
       'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/reservations/production',
+      '-f',
       'apps/reservations/Dockerfile',
       '.'
     ]
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push',
-      'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/reservations/production',
+      'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/reservations/production'
     ]
-  # auth
+  # Auth
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
       '-t',
       'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/auth/production',
+      '-f',
       'apps/auth/Dockerfile',
       '.'
     ]
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push',
-      'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/auth/production',
+      'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/auth/production'
     ]
-  # payments
+  # Payments
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
       '-t',
       'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/payments/production',
+      '-f',
       'apps/payments/Dockerfile',
       '.'
     ]
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push',
-      'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/payments/production',
+      'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/payments/production'
     ]
-  #notifications
+  # Notifications
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
       '-t',
       'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/notifications/production',
+      '-f',
       'apps/notifications/Dockerfile',
       '.'
     ]
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push',
-      'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/notifications/production',
+      'europe-west3-docker.pkg.dev/fair-syntax-457919-b9/notifications/production'
     ]
+
+options:
+  serviceAccount: 'projects/fair-syntax-457919-b9/serviceAccounts/cloudbuild-sa@fair-syntax-457919-b9.iam.gserviceaccount.com'
+  logging: CLOUD_LOGGING_ONLY
