@@ -1,6 +1,6 @@
+import { ROLE } from '@app/common/interfaces/auth.interface';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ROLE } from 'apps/auth/src/modules/auth/interfaces/auth.interface';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
