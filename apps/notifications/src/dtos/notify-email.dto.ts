@@ -1,6 +1,6 @@
-import { PickType } from '@nestjs/mapped-types';
-import { PaymentCreateChargeDto } from 'apps/payments/src/dto/payment-create-charge.dto';
+import { IsEmail } from 'class-validator';
 
-export class NotifyEmailDto extends PickType(PaymentCreateChargeDto, [
-  'email',
-]) {}
+export class NotifyEmailDto {
+  @IsEmail()
+  email: string;
+}

@@ -1,12 +1,11 @@
+import { ROLE } from '@app/common/interfaces/auth.interface';
 import { ExecutionContext, createParamDecorator } from '@nestjs/common';
-import { AuthUserDto } from 'apps/auth/src/modules/auth/dtos/auth-user.dto';
-import { ROLE } from 'apps/auth/src/modules/auth/interfaces/auth.interface';
 
 export const AuthUser = createParamDecorator(
   (_data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
 
-    return request.user as AuthUserDto; // use for only login
+    return request.user;
   },
 );
 

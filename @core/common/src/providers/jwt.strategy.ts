@@ -1,7 +1,7 @@
+import { IAuthPayload } from '@app/common/interfaces/auth.interface';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { IAuthPayload } from 'apps/auth/src/modules/auth/interfaces/auth.interface';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { decodeBase64Key } from '../helpers/decode-keys';
 
