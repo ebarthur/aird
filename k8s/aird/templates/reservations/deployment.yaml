@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: reservations
+  name: reservations
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reservations
+  template:
+    metadata:
+      labels:
+        app: reservations
+    spec:
+      containers:
+      - image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/reservations/production
+        name: reservations
+        env: 
+          - name: PORT
+            value: '3004'
+          - name: AUTH_HOST
+            value: 'auth-tcp'
+          - name: AUTH_PORT
+            value: '3003'
+          - name: PAYMENT_TCP_HOST
+            value: 'payments'
+          - name: PAYMENT_TCP_PORT
+            value: '3001'
+          - name: MONGODB_URI
+            valueFrom:
+              secretKeyRef:
+                name: mongodb
+                key: connectionString
+          - name: JWT_PUBLIC_KEY_BASE64
+            valueFrom:
+              secretKeyRef:
+                name: jwt
+                key: publicKey
+        ports:
+          - containerPort: 3004
