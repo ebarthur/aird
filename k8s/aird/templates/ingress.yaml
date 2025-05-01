@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: aird
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+spec:
+  rules:
+    - host: aird.ebartur.com
+      http:
+        paths:
+          - path: /reservations/
+            pathType: Prefix
+            backend:
+              service:
+                name: reservations
+                port:
+                  number: 3004
+          - path: /auth/
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-http
+                port:
+                  number: 3002
+          - path: /users/
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-http
+                port:
+                  number: 3002

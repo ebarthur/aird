@@ -13,5 +13,3 @@ spec:
   selector:
     app: reservations
   type: NodePort
-status:
-  loadBalancer: {}
