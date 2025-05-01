@@ -3,6 +3,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import { HttpExceptionFilter } from './filters/exception.filter';
+import { HealthModule } from './health/health.module';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
 import { HashService } from './services/hash.service';
@@ -20,6 +21,7 @@ import { HashService } from './services/hash.service';
         AcceptLanguageResolver,
       ],
     }),
+    HealthModule,
   ],
   providers: [
     HashService,
