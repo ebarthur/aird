@@ -20,7 +20,9 @@ export class AuthController {
     @AuthUser() user: AuthUserDto,
     @Res({ passthrough: true }) response: Response,
   ) {
-    await this.authService.login(user, response);
+    const jwt = await this.authService.login(user, response);
+
+    return jwt;
   }
 
   @UseGuards(JwtGuard)

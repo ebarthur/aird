@@ -13,7 +13,8 @@ export class AuthJwtAccessStrategy extends PassportStrategy(
   constructor(configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: any) => request?.cookies?.auth || request?.auth,
+        (request: any) =>
+          request?.cookies?.auth || request?.auth || request?.headers.auth,
       ]),
       ignoreExpiration: false,
       secretOrKey: decodeBase64Key(

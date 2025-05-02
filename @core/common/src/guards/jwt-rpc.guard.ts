@@ -19,7 +19,9 @@ export class JwtRPCAuthGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const jwt = context.switchToHttp().getRequest().cookies?.auth;
+    const jwt =
+      context.switchToHttp().getRequest().cookies?.auth ||
+      context.switchToHttp().getRequest().headers?.auth;
 
     if (!jwt) throw new UnauthorizedException();
 
