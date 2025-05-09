@@ -2,15 +2,13 @@ import { ping } from 'tcp-ping';
 
 describe('Health', () => {
   test('Reservations', async () => {
-    const response = await fetch('http://localhost:3000');
-
-    expect(response.ok).toBeTruthy();
+    const response = await fetch('http://reservations:3000');
+    expect(response.status).toEqual(200);
   });
 
   test('Auth', async () => {
-    const response = await fetch('http://localhost:3001');
-
-    expect(response.ok).toBeTruthy();
+    const response = await fetch('http://auth:3001');
+    expect(response.status).toEqual(200);
   });
 
   test('Payments', (done) => {
