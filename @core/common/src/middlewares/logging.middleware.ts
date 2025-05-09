@@ -8,9 +8,15 @@ export class LoggingMiddleware implements NestMiddleware {
   private logger = new Logger('HTTP');
   private appId = process.env.LOGSFF_APP_ID!;
   private excludedHeaders = ['authorization', 'cookie', 'set-cookie'];
+  private excludedPaths = ['/'];
 
   use(req: Request, res: Response, next: NextFunction): void {
     const { method, originalUrl } = req;
+
+    if (this.excludedPaths.includes(originalUrl)) {
+      return next();
+    }
+
     const startTime = Date.now();
 
     const filteredHeaders: Record<string, string | string[] | undefined> = {};
@@ -39,7 +45,14 @@ export class LoggingMiddleware implements NestMiddleware {
       };
 
       const logMessage = `${method} ${originalUrl} ${statusCode} ${contentLength || 0} - ${duration}ms`;
-      this.logger.log(logMessage);
+
+      if (statusCode >= 500) {
+        this.logger.error(logMessage);
+      } else if (statusCode >= 400) {
+        this.logger.warn(logMessage);
+      } else {
+        this.logger.log(logMessage);
+      }
 
       if (isProduction) {
         send(log).catch((error) => {
