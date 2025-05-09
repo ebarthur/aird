@@ -1,15 +1,13 @@
-import { isProduction } from '@app/common/config/environment';
 import { setupApp } from '@app/common/config/setup/setup';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app/app.module';
+import { LogsffLogger } from '@app/common/logger/logsff-logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: isProduction
-      ? ['error', 'warn']
-      : ['log', 'warn', 'debug', 'error', 'verbose'],
+    logger: new LogsffLogger('Auth'),
   });
   const configService = app.get(ConfigService);
   app.connectMicroservice<MicroserviceOptions>({

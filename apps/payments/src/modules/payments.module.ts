@@ -20,6 +20,9 @@ import { PaymentsService } from '../services/payments.service';
         STRIPE_SECRET_KEY: Joi.string().required(),
         NOTIFICATIONS_HOST: Joi.string().required(),
         NOTIFICATIONS_PORT: Joi.number().port().default(3004),
+        LOGSFF_APP_ID: Joi.string().required(),
+        LOGSFF_TOKEN: Joi.string().required(),
+        LOGSFF_URL: Joi.string().uri().required(),
       }),
     }),
     ClientsModule.registerAsync([

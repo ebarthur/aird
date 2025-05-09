@@ -3,9 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { PaymentsModule } from './modules/payments.module';
+import { LogsffLogger } from '@app/common/logger/logsff-logger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(PaymentsModule);
+  const app = await NestFactory.create(PaymentsModule, {
+    logger: new LogsffLogger('Payments'),
+  });
   const configService = app.get(ConfigService);
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,

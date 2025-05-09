@@ -17,6 +17,9 @@ import { NotificationsService } from './services/notifications.service';
         NOTIFICATIONS_PORT: Joi.number().port().default(3004),
         RESEND_API_KEY: Joi.string().required(),
         RESEND_FROM: Joi.string().email().required(),
+        LOGSFF_APP_ID: Joi.string().required(),
+        LOGSFF_TOKEN: Joi.string().required(),
+        LOGSFF_URL: Joi.string().uri().required(),
       }),
     }),
     ResendModule.forRootAsync({

@@ -27,5 +27,20 @@ spec:
               secretKeyRef:
                 name: resend
                 key: apiKey
+          - name: LOGSFF_APP_ID
+            valueFrom: 
+              secretKeyRef:
+                name: logsff
+                key: appId
+          - name: LOGSFF_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: logsff
+                key: token
+          - name: LOGSFF_URL
+            valueFrom:
+              secretKeyRef:
+                name: logsff
+                key: url
         ports:
           - containerPort: 3000

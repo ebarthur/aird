@@ -37,6 +37,21 @@ spec:
               secretKeyRef:
                 name: jwt
                 key: publicKey
+          - name: LOGSFF_APP_ID
+            valueFrom: 
+              secretKeyRef:
+                name: logsff
+                key: appId
+          - name: LOGSFF_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: logsff
+                key: token
+          - name: LOGSFF_URL
+            valueFrom:
+              secretKeyRef:
+                name: logsff
+                key: url
         ports:
           - containerPort: 3002
           - containerPort: 3003
