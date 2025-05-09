@@ -10,16 +10,20 @@ services:
       - payments
       - notifications
   reservations:
-      image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/reservations/production
-      ports: 
+    depends_on:
+      - mongo
+    image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/reservations/production
+    ports: 
         - '3000:3000'
-      env_file:
+    env_file:
         - ../apps/reservations/.env.docker
   auth:
-      image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/auth/production
-      ports: 
+    depends_on:
+      - mongo
+    image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/auth/production
+    ports: 
         - '3001:3001'
-      env_file:
+    env_file:
         - ../apps/auth/.env.docker
   payments:
     image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/payments/production
@@ -28,10 +32,10 @@ services:
     env_file:
       - ../apps/payments/.env.docker
   notifications:
-      image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/notifications/production
-      ports: 
+    image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/notifications/production
+    ports: 
         - '3004:3004'
-      env_file:
+    env_file:
         - ../apps/notifications/.env.docker
   mongo:
     image: mongo 

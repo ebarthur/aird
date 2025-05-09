@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
-import { IAuthPayload } from '../../../../../../@core/common/src/interfaces/auth.interface';
 import { AuthUserDto } from '../dtos/auth-user.dto';
 import { IAuthService } from '../interfaces/auth-service.interface';
+import { IAuthPayload } from '@app/common/interfaces/auth.interface';
 
 @Injectable()
 export class AuthService implements IAuthService {
@@ -16,12 +16,13 @@ export class AuthService implements IAuthService {
     };
 
     const token = this.jwtService.sign(tokenPayload);
+
     response.cookie('auth', token, {
       httpOnly: true,
       sameSite: 'lax',
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
     });
 
-    return token;
+    return { token };
   }
 }
