@@ -1,7 +1,7 @@
 import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { Log, send } from '../helpers/logsff-client';
 import { isProduction } from '../config/environment';
+import { Log, send } from '../helpers/logsff-client';
 
 @Injectable()
 export class LoggingMiddleware implements NestMiddleware {

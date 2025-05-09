@@ -1,4 +1,4 @@
-import * as authData from './data/auth.json';
+import { authData, reservationData } from './data';
 
 describe('Reservations', () => {
   let token: string;
@@ -46,21 +46,7 @@ describe('Reservations', () => {
           'Content-Type': 'application/json',
           auth: token,
         },
-        body: JSON.stringify({
-          startDate: '02-01-2023',
-          endDate: '02-05-2023',
-          placeId: '123',
-          invoiceId: '123',
-          charge: {
-            amount: 13,
-            card: {
-              cvc: '413',
-              exp_month: 12,
-              exp_year: 2027,
-              number: '4242 4242 4242 4242',
-            },
-          },
-        }),
+        body: JSON.stringify(reservationData.create),
       },
     );
     expect(responseCreate.ok).toBeTruthy();

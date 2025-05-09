@@ -1,6 +1,6 @@
+import { isProduction } from '@app/common/config/environment';
 import { Injectable, LoggerService, Scope } from '@nestjs/common';
 import { Log, send } from '../helpers/logsff-client';
-import { isProduction } from '@app/common/config/environment';
 
 @Injectable({ scope: Scope.REQUEST })
 export class LogsffLogger implements LoggerService {

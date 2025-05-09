@@ -1,9 +1,9 @@
 import { setupApp } from '@app/common/config/setup/setup';
+import { LogsffLogger } from '@app/common/logger/logsff-logger';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { PaymentsModule } from './modules/payments.module';
-import { LogsffLogger } from '@app/common/logger/logsff-logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(PaymentsModule, {

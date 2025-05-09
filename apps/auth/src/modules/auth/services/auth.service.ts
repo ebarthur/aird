@@ -1,9 +1,9 @@
+import { IAuthPayload } from '@app/common/interfaces/auth.interface';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { AuthUserDto } from '../dtos/auth-user.dto';
 import { IAuthService } from '../interfaces/auth-service.interface';
-import { IAuthPayload } from '@app/common/interfaces/auth.interface';
 
 @Injectable()
 export class AuthService implements IAuthService {
