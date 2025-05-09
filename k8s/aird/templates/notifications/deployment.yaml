@@ -17,6 +17,7 @@ spec:
       containers:
       - image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/notifications/production
         name: notifications
+        imagePullPolicy: Always
         env:
           - name: NOTIFICATIONS_PORT
             value: '3000'

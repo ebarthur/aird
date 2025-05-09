@@ -17,6 +17,7 @@ spec:
       containers:
       - image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/payments/production
         name: payments
+        imagePullPolicy: Always
         env: 
           - name: PAYMENT_TCP_HOST
             value: 'payments'

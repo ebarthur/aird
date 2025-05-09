@@ -17,6 +17,7 @@ spec:
       containers:
       - image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/reservations/production
         name: reservations
+        imagePullPolicy: Always
         env: 
           - name: PORT
             value: '3004'
