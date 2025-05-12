@@ -8,9 +8,5 @@ export default registerAs(
       privateKey: process.env.JWT_PRIVATE_KEY_BASE64,
       expiresIn: '1d',
     },
-    tcp: {
-      host: process.env.AUTH_HOST,
-      port: process.env.AUTH_PORT,
-    },
   }),
 );

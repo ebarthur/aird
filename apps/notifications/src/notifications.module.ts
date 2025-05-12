@@ -1,6 +1,6 @@
 import { CommonModule } from '@app/common/common.module';
 import emailConfig from '@app/common/config/environment/email.config';
-import notificationsConfig from '@app/common/config/environment/notifications.config';
+import rmqConfig from '@app/common/config/environment/rmq.config';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
@@ -12,9 +12,9 @@ import { NotificationsService } from './services/notifications.service';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [notificationsConfig, emailConfig],
+      load: [emailConfig, rmqConfig],
       validationSchema: Joi.object({
-        NOTIFICATIONS_PORT: Joi.number().port().default(3004),
+        RABBITMQ_URI: Joi.string().uri().required(),
         RESEND_API_KEY: Joi.string().required(),
         RESEND_FROM: Joi.string().email().required(),
         LOGSFF_APP_ID: Joi.string().required(),

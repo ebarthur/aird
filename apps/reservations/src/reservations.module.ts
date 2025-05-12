@@ -1,15 +1,16 @@
 import {
+  AUTH_RMQ_QUEUE,
   AUTH_SERVICE,
+  PAYMENTS_RMQ_QUEUE,
   PAYMENTS_SERVICE,
 } from '@app/common/CONSTANTS/app.constants';
 import { CommonModule } from '@app/common/common.module';
 import authConfig from '@app/common/config/environment/auth.config';
 import databaseConfig from '@app/common/config/environment/db.config';
-import paymentConfig from '@app/common/config/environment/payment.config';
+import rmqConfig from '@app/common/config/environment/rmq.config';
 import { DatabaseModule } from '@app/common/database/database.module';
-import { AuthJwtAccessGuard } from '@app/common/guards/jwt.guard';
+import { JwtRPCAuthGuard } from '@app/common/guards/jwt-rpc.guard';
 import { RolesGuard } from '@app/common/guards/roles.guard';
-import { AuthJwtAccessStrategy } from '@app/common/providers/jwt.strategy';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
@@ -28,15 +29,12 @@ import { ReservationsService } from './services/reservations.service';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, authConfig, paymentConfig],
+      load: [databaseConfig, authConfig, rmqConfig],
       validationSchema: Joi.object({
+        RABBITMQ_URI: Joi.string().uri().required(),
         MONGODB_URI: Joi.string().uri().required(),
         JWT_PUBLIC_KEY_BASE64: Joi.string().base64().required(),
         PORT: Joi.number().port().default(3000),
-        AUTH_HOST: Joi.string().hostname().required(),
-        AUTH_PORT: Joi.number().port().required(),
-        PAYMENT_TCP_PORT: Joi.number().port().default(3003),
-        PAYMENT_TCP_HOST: Joi.string().hostname().required(),
         LOGSFF_APP_ID: Joi.string().required(),
         LOGSFF_TOKEN: Joi.string().required(),
         LOGSFF_URL: Joi.string().uri().required(),
@@ -52,10 +50,10 @@ import { ReservationsService } from './services/reservations.service';
       {
         name: AUTH_SERVICE,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.RMQ,
           options: {
-            host: configService.get('auth.tcp.host'),
-            port: configService.get('auth.tcp.port'),
+            urls: [configService.getOrThrow<string>('rmq.connections.uri')],
+            queue: AUTH_RMQ_QUEUE,
           },
         }),
         inject: [ConfigService],
@@ -63,10 +61,10 @@ import { ReservationsService } from './services/reservations.service';
       {
         name: PAYMENTS_SERVICE,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.RMQ,
           options: {
-            host: configService.get('payment.connections.host'),
-            port: configService.get('payment.connections.port'),
+            urls: [configService.getOrThrow<string>('rmq.connections.uri')],
+            queue: PAYMENTS_RMQ_QUEUE,
           },
         }),
         inject: [ConfigService],
@@ -77,10 +75,9 @@ import { ReservationsService } from './services/reservations.service';
   providers: [
     ReservationsService,
     ReservationsRepository,
-    AuthJwtAccessStrategy,
     {
       provide: APP_GUARD,
-      useClass: AuthJwtAccessGuard,
+      useClass: JwtRPCAuthGuard,
     },
     {
       provide: APP_GUARD,

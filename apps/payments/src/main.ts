@@ -1,3 +1,4 @@
+import { PAYMENTS_RMQ_QUEUE } from '@app/common/CONSTANTS/app.constants';
 import { setupApp } from '@app/common/config/setup/setup';
 import { LogsffLogger } from '@app/common/logger/logsff-logger';
 import { ConfigService } from '@nestjs/config';
@@ -11,10 +12,10 @@ async function bootstrap() {
   });
   const configService = app.get(ConfigService);
   app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.TCP,
+    transport: Transport.RMQ,
     options: {
-      host: '0.0.0.0',
-      port: configService.get<number>('payment.connections.port'),
+      urls: [configService.getOrThrow<string>('rmq.connections.uri')],
+      queue: PAYMENTS_RMQ_QUEUE,
     },
   });
   await setupApp(app);

@@ -1,7 +1,10 @@
-import { NOTIFICATIONS_SERVICE } from '@app/common/CONSTANTS/app.constants';
+import {
+  NOTIFICATIONS_RMQ_QUEUE,
+  NOTIFICATIONS_SERVICE,
+} from '@app/common/CONSTANTS/app.constants';
 import { CommonModule } from '@app/common/common.module';
-import notificationsConfig from '@app/common/config/environment/notifications.config';
 import paymentConfig from '@app/common/config/environment/payment.config';
+import rmqConfig from '@app/common/config/environment/rmq.config';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
@@ -14,12 +17,10 @@ import { PaymentsService } from '../services/payments.service';
     CommonModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [paymentConfig, notificationsConfig],
+      load: [paymentConfig, rmqConfig],
       validationSchema: Joi.object({
-        PAYMENT_TCP_PORT: Joi.number().port().default(3003),
+        RABBITMQ_URI: Joi.string().uri().required(),
         STRIPE_SECRET_KEY: Joi.string().required(),
-        NOTIFICATIONS_HOST: Joi.string().required(),
-        NOTIFICATIONS_PORT: Joi.number().port().default(3004),
         LOGSFF_APP_ID: Joi.string().required(),
         LOGSFF_TOKEN: Joi.string().required(),
         LOGSFF_URL: Joi.string().uri().required(),
@@ -29,10 +30,10 @@ import { PaymentsService } from '../services/payments.service';
       {
         name: NOTIFICATIONS_SERVICE,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.RMQ,
           options: {
-            host: configService.get('notifications.connections.host'),
-            port: configService.get('notifications.connections.port'),
+            urls: [configService.getOrThrow<string>('rmq.connections.uri')],
+            queue: NOTIFICATIONS_RMQ_QUEUE,
           },
         }),
         inject: [ConfigService],

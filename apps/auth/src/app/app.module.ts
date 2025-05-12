@@ -1,6 +1,7 @@
 import { CommonModule } from '@app/common/common.module';
 import authConfig from '@app/common/config/environment/auth.config';
 import databaseConfig from '@app/common/config/environment/db.config';
+import rmqConfig from '@app/common/config/environment/rmq.config';
 import { AuthJwtAccessGuard } from '@app/common/guards/jwt.guard';
 import { RolesGuard } from '@app/common/guards/roles.guard';
 import { AuthJwtAccessStrategy } from '@app/common/providers/jwt.strategy';
@@ -14,13 +15,13 @@ import { AuthModule } from '../modules/auth/auth.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, authConfig],
+      load: [databaseConfig, authConfig, rmqConfig],
       validationSchema: Joi.object({
+        RABBITMQ_URI: Joi.string().uri().required(),
         MONGODB_URI: Joi.string().uri().required(),
         JWT_PRIVATE_KEY_BASE64: Joi.string().base64().required(),
         JWT_PUBLIC_KEY_BASE64: Joi.string().base64().required(),
         PORT: Joi.number().port().default(3001),
-        AUTH_PORT: Joi.number().port().required(),
         LOGSFF_APP_ID: Joi.string().required(),
         LOGSFF_TOKEN: Joi.string().required(),
         LOGSFF_URL: Joi.string().uri().required(),

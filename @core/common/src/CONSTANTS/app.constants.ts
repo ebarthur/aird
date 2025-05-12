@@ -5,3 +5,6 @@ export const NOTIFY_EMAIL = 'notify_email';
 export const PAYMENTS_SERVICE = 'payments';
 export const AUTH_MESSAGE_PATTERN = 'authenticate';
 export const CREATE_CHARGE = 'create_charge';
+export const AUTH_RMQ_QUEUE = 'auth';
+export const PAYMENTS_RMQ_QUEUE = 'payments';
+export const NOTIFICATIONS_RMQ_QUEUE = 'notifications';

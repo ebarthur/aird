@@ -1,9 +1,6 @@
 import { AbstractDocument } from '@app/common/database/abstract.schema';
+import { ROLE, USER_ROLE } from '@app/common/interfaces/auth.interface';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import {
-  ROLE,
-  USER_ROLE,
-} from '../../../../../../@core/common/src/interfaces/auth.interface';
 
 @Schema({ versionKey: false })
 export class UserDocument extends AbstractDocument {
