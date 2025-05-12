@@ -1,9 +1,15 @@
 import {
-  CREATE_CHARGE,
-  PAYMENTS_SERVICE,
-} from '@app/common/CONSTANTS/app.constants';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+  PAYMENTS_SERVICE_NAME,
+  PaymentsServiceClient,
+} from '@app/common/types/payments';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  OnModuleInit,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { ClientGrpc } from '@nestjs/microservices';
 import { UsersRepository } from 'apps/auth/src/modules/users/repositories/users.repository';
 import { ObjectId } from 'mongoose';
 import { Observable, catchError, map } from 'rxjs';
@@ -15,20 +21,35 @@ import { IReservationService } from '../interfaces/reservation-service.interface
 import { ReservationsRepository } from '../repositories/reservations.repository';
 
 @Injectable()
-export class ReservationsService implements IReservationService {
+export class ReservationsService implements IReservationService, OnModuleInit {
+  private paymentService: PaymentsServiceClient;
   constructor(
     private readonly reservationRepository: ReservationsRepository,
     private readonly userRepository: UsersRepository,
-    @Inject(PAYMENTS_SERVICE) private readonly paymentsService: ClientProxy,
+    @Inject(PAYMENTS_SERVICE_NAME) private readonly client: ClientGrpc,
   ) {}
+
+  onModuleInit() {
+    this.paymentService = this.client.getService<PaymentsServiceClient>(
+      PAYMENTS_SERVICE_NAME,
+    );
+  }
   async create(
     createReservationDto: CreateReservationDto,
     userId: string,
   ): Promise<Observable<Promise<ReservationDocument>>> {
-    const { email } = await this.userRepository.findOneOrFail({ _id: userId });
+    let email: string;
+    try {
+      const user = await this.userRepository.findOneOrFail({
+        _id: userId,
+      });
+      email = user.email;
+    } catch (_) {
+      throw new UnauthorizedException();
+    }
 
-    return this.paymentsService
-      .send(CREATE_CHARGE, { ...createReservationDto.charge, email })
+    return this.paymentService
+      .createCharge({ ...createReservationDto.charge, email })
       .pipe(
         map((res: Stripe.PaymentIntent) => {
           const { id: invoiceId } = res;
@@ -40,6 +61,7 @@ export class ReservationsService implements IReservationService {
           });
         }),
         catchError((_e) => {
+          console.log('sTRIPE ERROR: ', _e);
           throw new BadRequestException('payment.errorProcessingPayment');
         }),
       );

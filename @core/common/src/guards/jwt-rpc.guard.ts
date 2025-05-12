@@ -1,21 +1,24 @@
 import {
-  AUTH_MESSAGE_PATTERN,
-  AUTH_SERVICE,
-} from '@app/common/CONSTANTS/app.constants';
-import {
   CanActivate,
   ExecutionContext,
   Inject,
   Injectable,
+  OnModuleInit,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientGrpc } from '@nestjs/microservices';
 import { Observable, catchError, map, of, tap } from 'rxjs';
+import { AUTH_SERVICE_NAME, AuthServiceClient } from '../types/auth';
 
 @Injectable()
-export class JwtRPCAuthGuard implements CanActivate {
-  constructor(@Inject(AUTH_SERVICE) private readonly authClient: ClientProxy) {}
+export class JwtRPCAuthGuard implements CanActivate, OnModuleInit {
+  private authService: AuthServiceClient;
+  constructor(@Inject(AUTH_SERVICE_NAME) private readonly client: ClientGrpc) {}
 
+  onModuleInit() {
+    this.authService =
+      this.client.getService<AuthServiceClient>(AUTH_SERVICE_NAME);
+  }
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -25,16 +28,12 @@ export class JwtRPCAuthGuard implements CanActivate {
 
     if (!jwt) throw new UnauthorizedException();
 
-    return this.authClient
-      .send(AUTH_MESSAGE_PATTERN, {
-        auth: jwt,
-      })
-      .pipe(
-        tap((res) => {
-          context.switchToHttp().getRequest().user = res;
-        }),
-        map(() => true),
-        catchError(() => of(false)),
-      );
+    return this.authService.authenticate({ auth: jwt }).pipe(
+      tap((res) => {
+        context.switchToHttp().getRequest().user = res;
+      }),
+      map(() => true),
+      catchError(() => of(false)),
+    );
   }
 }

@@ -1,10 +1,10 @@
 import {
-  NOTIFICATIONS_SERVICE,
-  NOTIFY_EMAIL,
-} from '@app/common/CONSTANTS/app.constants';
+  NOTIFICATIONS_SERVICE_NAME,
+  NotificationsServiceClient,
+} from '@app/common/types/notifications';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientGrpc } from '@nestjs/microservices';
 import Stripe from 'stripe';
 import { PaymentCreateChargeDto } from '../dto/payment-create-charge.dto';
 import { IPaymentService } from '../interfaces/payment.interface';
@@ -12,10 +12,12 @@ import { IPaymentService } from '../interfaces/payment.interface';
 @Injectable()
 export class PaymentsService implements IPaymentService {
   private readonly stripeClient: Stripe;
+  private notificationService: NotificationsServiceClient;
+
   constructor(
     private readonly configService: ConfigService,
-    @Inject(NOTIFICATIONS_SERVICE)
-    private readonly notificationService: ClientProxy,
+    @Inject(NOTIFICATIONS_SERVICE_NAME)
+    private readonly client: ClientGrpc,
   ) {
     this.stripeClient = new Stripe(
       configService.get<string>('payment.stripe.secret'),
@@ -35,7 +37,15 @@ export class PaymentsService implements IPaymentService {
       payment_method: 'pm_card_visa', // Test card token provided by Stripe
       payment_method_types: ['card'],
     });
-    this.notificationService.emit(NOTIFY_EMAIL, { email }); // fire and forget
+
+    if (!this.notificationService) {
+      this.notificationService =
+        this.client.getService<NotificationsServiceClient>(
+          NOTIFICATIONS_SERVICE_NAME,
+        );
+    }
+
+    this.notificationService.notifyEmail({ email }).subscribe(() => {});
 
     return paymentIntent;
   }

@@ -1,5 +1,7 @@
+import { join } from 'node:path';
 import { setupApp } from '@app/common/config/setup/setup';
 import { LogsffLogger } from '@app/common/logger/logsff-logger';
+import { PAYMENTS_PACKAGE_NAME } from '@app/common/types/payments';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
@@ -11,10 +13,11 @@ async function bootstrap() {
   });
   const configService = app.get(ConfigService);
   app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.TCP,
+    transport: Transport.GRPC,
     options: {
-      host: '0.0.0.0',
-      port: configService.get<number>('payment.connections.port'),
+      package: PAYMENTS_PACKAGE_NAME,
+      protoPath: join(__dirname, '../../../proto/payments.proto'),
+      url: configService.getOrThrow<string>('payment.grpc.url'),
     },
   });
   await setupApp(app);
