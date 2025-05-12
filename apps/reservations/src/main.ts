@@ -2,7 +2,7 @@ import { setupApp } from '@app/common/config/setup/setup';
 import { LogsffLogger } from '@app/common/logger/logsff-logger';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { ReservationsModule } from './reservations.module';
+import { ReservationsModule } from './modules/reservations.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(ReservationsModule, {
