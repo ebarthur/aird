@@ -1,5 +1,7 @@
   services:
     reservations:
+      depends_on:
+        - mysql
       build: 
         context: .
         dockerfile: ./apps/reservations/Dockerfile
@@ -13,6 +15,8 @@
       env_file:
         - ./apps/reservations/.env.docker
     auth:
+      depends_on:
+        - mysql
       build: 
         context: .
         dockerfile: ./apps/auth/Dockerfile
@@ -53,6 +57,9 @@
         # - /usr/src/app/node_modules
       env_file:
         - ./apps/notifications/.env.docker
-    mongo:
-      image: mongo
-      
+    mysql:
+      image: mysql
+      env_file: 
+        - ./.env
+      ports:
+        - '3306:3306'

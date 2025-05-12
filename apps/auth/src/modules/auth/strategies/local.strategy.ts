@@ -20,7 +20,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     try {
       const user = await this.userService.validateUser({ email, password });
       return {
-        _id: user._id,
+        id: user.id,
         email: user.email,
         role: user.role,
       };

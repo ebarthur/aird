@@ -1,8 +1,8 @@
 import { CreateUserDto } from '../dtos/create-user.dto';
-import { UserDocument } from '../entities/user.schema';
+import { User } from '../entities/user.entity';
 
 export interface IUserService {
-  validateUser(data: CreateUserDto): Promise<UserDocument>;
+  validateUser(data: CreateUserDto): Promise<User>;
   create(data: CreateUserDto): Promise<void>;
-  find(): Promise<UserDocument[]>;
+  find(): Promise<User[]>;
 }

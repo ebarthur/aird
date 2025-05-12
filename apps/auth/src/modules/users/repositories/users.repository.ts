@@ -1,10 +1,16 @@
 import { AbstractRepository } from '@app/common/database/abstract.repository';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { UserDocument } from '../entities/user.schema';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
+import { User } from '../entities/user.entity';
 
-export class UsersRepository extends AbstractRepository<UserDocument> {
-  constructor(@InjectModel(UserDocument.name) userModel: Model<UserDocument>) {
-    super(userModel, UsersRepository.name);
+@Injectable()
+export class UsersRepository extends AbstractRepository<User> {
+  constructor(
+    @InjectRepository(User)
+    userRepository: Repository<User>,
+    entityManager: EntityManager,
+  ) {
+    super(userRepository, entityManager);
   }
 }

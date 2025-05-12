@@ -16,7 +16,6 @@ import { AuthModule } from '../modules/auth/auth.module';
       isGlobal: true,
       load: [databaseConfig, authConfig],
       validationSchema: Joi.object({
-        MONGODB_URI: Joi.string().uri().required(),
         JWT_PRIVATE_KEY_BASE64: Joi.string().base64().required(),
         JWT_PUBLIC_KEY_BASE64: Joi.string().base64().required(),
         PORT: Joi.number().port().default(3001),

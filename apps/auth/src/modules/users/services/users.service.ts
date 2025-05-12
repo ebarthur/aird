@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { LoginUserDto } from '../dtos/login-user.dto';
-import { UserDocument } from '../entities/user.schema';
+import { User } from '../entities/user.entity';
 import { IUserService } from '../interfaces/user-service.interface';
 import { UsersRepository } from '../repositories/users.repository';
 
@@ -30,18 +30,19 @@ export class UserService implements IUserService {
       throw new UnprocessableEntityException('user.userExistsByEmail');
 
     const hashedPassword = await this.hashService.createHash(password);
-    await this.usersRepository.create({
+    const user = new User({
       email,
       password: hashedPassword,
       role: 'common',
     });
+    await this.usersRepository.create(user);
   }
 
-  async find(): Promise<UserDocument[]> {
+  async find(): Promise<User[]> {
     return this.usersRepository.find({});
   }
 
-  async validateUser(loginUserDto: LoginUserDto): Promise<UserDocument> {
+  async validateUser(loginUserDto: LoginUserDto): Promise<User> {
     const { email, password: loginPassword } = loginUserDto;
     const user = await this.usersRepository.findOne({
       email,
@@ -57,7 +58,7 @@ export class UserService implements IUserService {
     if (!isValidPassword)
       throw new UnauthorizedException('user.invalidPassword');
 
-    this.logger.log(`User ${user._id} has been validated.`);
+    this.logger.log(`User ${user.id} has been validated.`);
     return user;
   }
 }

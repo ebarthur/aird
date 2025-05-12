@@ -5,12 +5,11 @@ import {
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { UsersRepository } from 'apps/auth/src/modules/users/repositories/users.repository';
-import { ObjectId } from 'mongoose';
 import { Observable, catchError, map } from 'rxjs';
 import Stripe from 'stripe';
 import { CreateReservationDto } from '../dto/create-reservation.dto';
 import { UpdateReservationDto } from '../dto/update-reservation.dto';
-import { ReservationDocument } from '../entities/reservation.schema';
+import { Reservation } from '../entities/reservation.entity';
 import { IReservationService } from '../interfaces/reservation-service.interface';
 import { ReservationsRepository } from '../repositories/reservations.repository';
 
@@ -24,22 +23,26 @@ export class ReservationsService implements IReservationService {
   async create(
     createReservationDto: CreateReservationDto,
     userId: string,
-  ): Promise<Observable<Promise<ReservationDocument>>> {
-    const { email } = await this.userRepository.findOneOrFail({ _id: userId });
+  ): Promise<Observable<Promise<Reservation>>> {
+    const { email } = await this.userRepository.findOneOrFail({ id: userId });
 
     return this.paymentsService
       .send(CREATE_CHARGE, { ...createReservationDto.charge, email })
       .pipe(
         map((res: Stripe.PaymentIntent) => {
           const { id: invoiceId } = res;
-          return this.reservationRepository.create({
-            ...createReservationDto,
+          const reservation = new Reservation({
+            startDate: createReservationDto.startDate,
+            endDate: createReservationDto.endDate,
             userId,
             timestamp: new Date(),
             invoiceId,
           });
+
+          return this.reservationRepository.create(reservation);
         }),
         catchError((_e) => {
+          console.log(_e);
           throw new BadRequestException('payment.errorProcessingPayment');
         }),
       );
@@ -49,18 +52,18 @@ export class ReservationsService implements IReservationService {
     return this.reservationRepository.find({});
   }
 
-  async findOne(_id: ObjectId) {
-    return this.reservationRepository.findOneOrFail({ _id });
+  async findOne(id: string) {
+    return this.reservationRepository.findOneOrFail({ id });
   }
 
-  async update(_id: ObjectId, updateReservationDto: UpdateReservationDto) {
+  async update(id: string, updateReservationDto: UpdateReservationDto) {
     return this.reservationRepository.findOneAndUpdate(
-      { _id },
-      { $set: updateReservationDto },
+      { id },
+      updateReservationDto,
     );
   }
 
-  async remove(_id: ObjectId) {
-    return this.reservationRepository.findOneAndDelete({ _id });
+  async remove(id: string) {
+    return this.reservationRepository.findOneAndDelete({ id });
   }
 }

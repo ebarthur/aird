@@ -11,7 +11,7 @@ services:
       - notifications
   reservations:
     depends_on:
-      - mongo
+      - mysql
     image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/reservations/production
     ports: 
         - '3000:3000'
@@ -19,7 +19,7 @@ services:
         - ../apps/reservations/.env.docker
   auth:
     depends_on:
-      - mongo
+      - mysql
     image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/auth/production
     ports: 
         - '3001:3001'
@@ -37,5 +37,9 @@ services:
         - '3004:3004'
     env_file:
         - ../apps/notifications/.env.docker
-  mongo:
-    image: mongo 
+  mysql:
+      image: mysql
+      env_file: 
+        - ../.env
+      ports:
+        - '3306:3306'

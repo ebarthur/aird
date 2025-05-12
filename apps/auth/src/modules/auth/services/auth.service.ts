@@ -1,4 +1,4 @@
-import { IAuthPayload } from '@app/common/interfaces/auth.interface';
+import { IAuthPayload, ROLE } from '@app/common/interfaces/auth.interface';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
@@ -11,8 +11,8 @@ export class AuthService implements IAuthService {
 
   async login(user: AuthUserDto, response: Response) {
     const tokenPayload: IAuthPayload = {
-      id: user._id.toHexString(),
-      role: user.role,
+      id: user.id,
+      role: user.role as ROLE,
     };
 
     const token = this.jwtService.sign(tokenPayload);

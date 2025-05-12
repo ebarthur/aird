@@ -1,5 +1,4 @@
 import { CurrentUser, ReqUser } from '@app/common/decorators/auth.decorator';
-import { ValidateObjectIdPipe } from '@app/common/pipes/validate-object-id.pipe';
 import {
   Body,
   Controller,
@@ -9,7 +8,6 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ObjectId } from 'mongoose';
 import { CreateReservationDto } from '../dto/create-reservation.dto';
 import { UpdateReservationDto } from '../dto/update-reservation.dto';
 import { ReservationsService } from '../services/reservations.service';
@@ -32,20 +30,20 @@ export class ReservationsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ValidateObjectIdPipe) id: ObjectId) {
+  findOne(@Param('id') id: string) {
     return this.reservationsService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id', ValidateObjectIdPipe) id: ObjectId,
+    @Param('id') id: string,
     @Body() updateReservationDto: UpdateReservationDto,
   ) {
     return this.reservationsService.update(id, updateReservationDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ValidateObjectIdPipe) id: ObjectId) {
+  remove(@Param('id') id: string) {
     return this.reservationsService.remove(id);
   }
 }
