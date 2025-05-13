@@ -31,8 +31,8 @@ import { ReservationsService } from '../services/reservations.service';
       isGlobal: true,
       load: [databaseConfig, authConfig, paymentConfig],
       validationSchema: Joi.object({
-        AUTH_GRPC_URL: Joi.string().uri(),
-        PAYMENT_GRPC_URL: Joi.string().uri(),
+        AUTH_GRPC_URL: Joi.string().required(),
+        PAYMENT_GRPC_URL: Joi.string().required(),
         MONGODB_URI: Joi.string().uri().required(),
         JWT_PUBLIC_KEY_BASE64: Joi.string().base64().required(),
         PORT: Joi.number().port().default(3000),

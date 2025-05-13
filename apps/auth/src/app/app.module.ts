@@ -16,7 +16,7 @@ import { AuthModule } from '../modules/auth/auth.module';
       isGlobal: true,
       load: [databaseConfig, authConfig],
       validationSchema: Joi.object({
-        AUTH_GRPC_URL: Joi.string().uri(),
+        AUTH_GRPC_URL: Joi.string().required(),
         MONGODB_URI: Joi.string().uri().required(),
         JWT_PRIVATE_KEY_BASE64: Joi.string().base64().required(),
         JWT_PUBLIC_KEY_BASE64: Joi.string().base64().required(),

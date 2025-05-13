@@ -20,8 +20,8 @@ import { PaymentsService } from '../services/payments.service';
       isGlobal: true,
       load: [paymentConfig, notificationsConfig],
       validationSchema: Joi.object({
-        NOTIFICATION_GRPC_URL: Joi.string().uri().required(),
-        PAYMENT_GRPC_URL: Joi.string().uri().required(),
+        NOTIFICATION_GRPC_URL: Joi.string().required(),
+        PAYMENT_GRPC_URL: Joi.string().required(),
         STRIPE_SECRET_KEY: Joi.string().required(),
         LOGSFF_APP_ID: Joi.string().required(),
         LOGSFF_TOKEN: Joi.string().required(),
