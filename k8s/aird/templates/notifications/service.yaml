@@ -3,10 +3,10 @@ kind: Service
 metadata:
   labels:
     app: notifications
-  name: notifications
+  name: notifications-grpc
 spec:
   ports:
-  - name: "tcp"
+  - name: "grpc"
     port: 3000
     protocol: TCP
     targetPort: 3000

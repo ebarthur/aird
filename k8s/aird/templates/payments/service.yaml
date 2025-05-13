@@ -3,10 +3,10 @@ kind: Service
 metadata:
   labels:
     app: payments
-  name: payments
+  name: payments-grpc
 spec:
   ports:
-  - name: "tcp"
+  - name: "grpc"
     port: 3001
     protocol: TCP
     targetPort: 3001

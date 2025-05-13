@@ -19,8 +19,8 @@ spec:
         name: notifications
         imagePullPolicy: Always
         env:
-          - name: NOTIFICATIONS_PORT
-            value: '3000'
+          - name: NOTIFICATION_GRPC_URL
+            value: '0.0.0.0:3000'
           - name: RESEND_FROM
             value: 'aird@ebartur.com'
           - name: RESEND_API_KEY
@@ -29,7 +29,7 @@ spec:
                 name: resend
                 key: apiKey
           - name: LOGSFF_APP_ID
-            valueFrom: 
+            valueFrom:
               secretKeyRef:
                 name: logsff
                 key: appId

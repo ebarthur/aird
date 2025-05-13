@@ -5,8 +5,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { ResendModule } from 'nestjs-resend';
-import { NotificationsController } from './controllers/notifications.controller';
-import { NotificationsService } from './services/notifications.service';
+import { NotificationsController } from '../controllers/notifications.controller';
+import { NotificationsService } from '../services/notifications.service';
 
 @Module({
   imports: [

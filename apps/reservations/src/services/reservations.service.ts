@@ -6,6 +6,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  Logger,
   OnModuleInit,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -13,7 +14,6 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { UsersRepository } from 'apps/auth/src/modules/users/repositories/users.repository';
 import { ObjectId } from 'mongoose';
 import { Observable, catchError, map } from 'rxjs';
-import Stripe from 'stripe';
 import { CreateReservationDto } from '../dto/create-reservation.dto';
 import { UpdateReservationDto } from '../dto/update-reservation.dto';
 import { ReservationDocument } from '../entities/reservation.schema';
@@ -23,6 +23,7 @@ import { ReservationsRepository } from '../repositories/reservations.repository'
 @Injectable()
 export class ReservationsService implements IReservationService, OnModuleInit {
   private paymentService: PaymentsServiceClient;
+  private logger = new Logger(ReservationsService.name, { timestamp: true });
   constructor(
     private readonly reservationRepository: ReservationsRepository,
     private readonly userRepository: UsersRepository,
@@ -51,17 +52,16 @@ export class ReservationsService implements IReservationService, OnModuleInit {
     return this.paymentService
       .createCharge({ ...createReservationDto.charge, email })
       .pipe(
-        map((res: Stripe.PaymentIntent) => {
-          const { id: invoiceId } = res;
+        map((res: { id: string }) => {
           return this.reservationRepository.create({
             ...createReservationDto,
             userId,
             timestamp: new Date(),
-            invoiceId,
+            invoiceId: res.id,
           });
         }),
-        catchError((_e) => {
-          console.log('sTRIPE ERROR: ', _e);
+        catchError((e) => {
+          this.logger.error(e);
           throw new BadRequestException('payment.errorProcessingPayment');
         }),
       );

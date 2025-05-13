@@ -18,17 +18,13 @@ spec:
       - image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/reservations/production
         name: reservations
         imagePullPolicy: Always
-        env: 
+        env:
           - name: PORT
             value: '3004'
-          - name: AUTH_HOST
-            value: 'auth-tcp'
-          - name: AUTH_PORT
-            value: '3003'
-          - name: PAYMENT_TCP_HOST
-            value: 'payments'
-          - name: PAYMENT_TCP_PORT
-            value: '3001'
+          - name: AUTH_GRPC_URL
+            value: 'auth-grpc:3003'
+          - name: PAYMENT_GRPC_URL
+            value: 'payments-grpc:3001'
           - name: MONGODB_URI
             valueFrom:
               secretKeyRef:
@@ -40,7 +36,7 @@ spec:
                 name: jwt
                 key: publicKey
           - name: LOGSFF_APP_ID
-            valueFrom: 
+            valueFrom:
               secretKeyRef:
                 name: logsff
                 key: appId

@@ -17,13 +17,13 @@ import { APP_GUARD } from '@nestjs/core';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { UsersModule } from 'apps/auth/src/modules/users/users.module';
 import * as Joi from 'joi';
-import { ReservationsController } from './controllers/reservations.controller';
+import { ReservationsController } from '../controllers/reservations.controller';
 import {
   ReservationDocument,
   ReservationSchema,
-} from './entities/reservation.schema';
-import { ReservationsRepository } from './repositories/reservations.repository';
-import { ReservationsService } from './services/reservations.service';
+} from '../entities/reservation.schema';
+import { ReservationsRepository } from '../repositories/reservations.repository';
+import { ReservationsService } from '../services/reservations.service';
 
 @Module({
   imports: [

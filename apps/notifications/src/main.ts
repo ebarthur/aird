@@ -5,7 +5,7 @@ import { NOTIFICATIONS_PACKAGE_NAME } from '@app/common/types/notifications';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { NotificationsModule } from './notifications.module';
+import { NotificationsModule } from './modules/notifications.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(NotificationsModule, {
