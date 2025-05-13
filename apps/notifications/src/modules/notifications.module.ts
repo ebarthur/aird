@@ -12,8 +12,9 @@ import { NotificationsService } from '../services/notifications.service';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [notificationsConfig, emailConfig],
+      load: [emailConfig, notificationsConfig],
       validationSchema: Joi.object({
+        NOTIFICATION_GRPC_URL: Joi.string().uri().required(),
         NOTIFICATIONS_PORT: Joi.number().port().default(3004),
         RESEND_API_KEY: Joi.string().required(),
         RESEND_FROM: Joi.string().email().required(),

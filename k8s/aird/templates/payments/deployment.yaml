@@ -18,22 +18,18 @@ spec:
       - image: europe-west3-docker.pkg.dev/fair-syntax-457919-b9/payments/production
         name: payments
         imagePullPolicy: Always
-        env: 
-          - name: PAYMENT_TCP_HOST
-            value: 'payments'
-          - name: PAYMENT_TCP_PORT
-            value: '3001'
-          - name: NOTIFICATIONS_HOST
-            value: 'notifications'
-          - name: NOTIFICATIONS_PORT
-            value: '3000'
+        env:
+          - name: PAYMENT_GRPC_URL
+            value: '0.0.0.0:3001'
+          - name: NOTIFICATION_GRPC_URL
+            value: 'notifications-grpc:3000'
           - name: STRIPE_SECRET_KEY
             valueFrom:
               secretKeyRef:
                 name: stripe
                 key: apiKey
           - name: LOGSFF_APP_ID
-            valueFrom: 
+            valueFrom:
               secretKeyRef:
                 name: logsff
                 key: appId
@@ -48,4 +44,4 @@ spec:
                 name: logsff
                 key: url
         ports:
-          - containerPort: 3001            
+          - containerPort: 3001

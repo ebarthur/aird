@@ -1,6 +1,5 @@
-import Stripe from 'stripe';
-import { CreateChargeDto } from '../../../../@core/common/src/dtos/create-charge.dto';
+import { CreateChargeDto } from '@app/common/dtos/create-charge.dto';
 
 export interface IPaymentService {
-  createCharge(data: CreateChargeDto): Promise<Stripe.PaymentIntent>;
+  createCharge(data: CreateChargeDto): Promise<{ id: string }>;
 }

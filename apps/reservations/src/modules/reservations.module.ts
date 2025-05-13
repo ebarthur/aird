@@ -1,7 +1,4 @@
-import {
-  AUTH_SERVICE,
-  PAYMENTS_SERVICE,
-} from '@app/common/CONSTANTS/app.constants';
+import { join } from 'node:path';
 import { CommonModule } from '@app/common/common.module';
 import authConfig from '@app/common/config/environment/auth.config';
 import databaseConfig from '@app/common/config/environment/db.config';
@@ -9,6 +6,11 @@ import paymentConfig from '@app/common/config/environment/payment.config';
 import { DatabaseModule } from '@app/common/database/database.module';
 import { JwtRPCAuthGuard } from '@app/common/guards/jwt-rpc.guard';
 import { RolesGuard } from '@app/common/guards/roles.guard';
+import { AUTH_PACKAGE_NAME, AUTH_SERVICE_NAME } from '@app/common/types/auth';
+import {
+  PAYMENTS_PACKAGE_NAME,
+  PAYMENTS_SERVICE_NAME,
+} from '@app/common/types/payments';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
@@ -29,13 +31,11 @@ import { ReservationsService } from '../services/reservations.service';
       isGlobal: true,
       load: [databaseConfig, authConfig, paymentConfig],
       validationSchema: Joi.object({
+        AUTH_GRPC_URL: Joi.string().uri(),
+        PAYMENT_GRPC_URL: Joi.string().uri(),
         MONGODB_URI: Joi.string().uri().required(),
         JWT_PUBLIC_KEY_BASE64: Joi.string().base64().required(),
         PORT: Joi.number().port().default(3000),
-        AUTH_HOST: Joi.string().hostname().required(),
-        AUTH_PORT: Joi.number().port().required(),
-        PAYMENT_TCP_PORT: Joi.number().port().default(3003),
-        PAYMENT_TCP_HOST: Joi.string().hostname().required(),
         LOGSFF_APP_ID: Joi.string().required(),
         LOGSFF_TOKEN: Joi.string().required(),
         LOGSFF_URL: Joi.string().uri().required(),
@@ -49,23 +49,25 @@ import { ReservationsService } from '../services/reservations.service';
     ]),
     ClientsModule.registerAsync([
       {
-        name: AUTH_SERVICE,
+        name: AUTH_SERVICE_NAME,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.GRPC,
           options: {
-            host: configService.get('auth.tcp.host'),
-            port: configService.get('auth.tcp.port'),
+            package: AUTH_PACKAGE_NAME,
+            protoPath: join(__dirname, '../../../proto/auth.proto'),
+            url: configService.getOrThrow<string>('auth.grpc.url'),
           },
         }),
         inject: [ConfigService],
       },
       {
-        name: PAYMENTS_SERVICE,
+        name: PAYMENTS_SERVICE_NAME,
         useFactory: (configService: ConfigService) => ({
-          transport: Transport.TCP,
+          transport: Transport.GRPC,
           options: {
-            host: configService.get('payment.connections.host'),
-            port: configService.get('payment.connections.port'),
+            package: PAYMENTS_PACKAGE_NAME,
+            protoPath: join(__dirname, '../../../proto/payments.proto'),
+            url: configService.getOrThrow<string>('payment.grpc.url'),
           },
         }),
         inject: [ConfigService],
