@@ -4,7 +4,6 @@ import authConfig from '@app/common/config/environment/auth.config';
 import databaseConfig from '@app/common/config/environment/db.config';
 import paymentConfig from '@app/common/config/environment/payment.config';
 import { DatabaseModule } from '@app/common/database/database.module';
-import { JwtRPCAuthGuard } from '@app/common/guards/jwt-rpc.guard';
 import { RolesGuard } from '@app/common/guards/roles.guard';
 import { AUTH_PACKAGE_NAME, AUTH_SERVICE_NAME } from '@app/common/types/auth';
 import {
@@ -24,6 +23,8 @@ import {
 } from '../entities/reservation.schema';
 import { ReservationsRepository } from '../repositories/reservations.repository';
 import { ReservationsService } from '../services/reservations.service';
+import { AuthJwtAccessStrategy } from '@app/common/providers/jwt.strategy';
+import { AuthJwtAccessGuard } from '@app/common/guards/jwt.guard';
 
 @Module({
   imports: [
@@ -78,9 +79,10 @@ import { ReservationsService } from '../services/reservations.service';
   providers: [
     ReservationsService,
     ReservationsRepository,
+    AuthJwtAccessStrategy,
     {
       provide: APP_GUARD,
-      useClass: JwtRPCAuthGuard,
+      useClass: AuthJwtAccessGuard,
     },
     {
       provide: APP_GUARD,

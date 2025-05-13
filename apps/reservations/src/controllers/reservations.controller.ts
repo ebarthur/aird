@@ -8,12 +8,15 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 import { CreateReservationDto } from '../dto/create-reservation.dto';
 import { UpdateReservationDto } from '../dto/update-reservation.dto';
 import { ReservationsService } from '../services/reservations.service';
+import { JwtRPCAuthGuard } from '@app/common/guards/jwt-rpc.guard';
 
+@UseGuards(JwtRPCAuthGuard)
 @Controller('reservations')
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
